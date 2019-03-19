@@ -49,12 +49,7 @@ class User_input(db.Model):
     service_type = db.Column(db.String, unique = False, nullable = False)
     input_timestamp = db.Column(db.DateTime, unique = False, nullable = False)
     receive_timestamp = db.Column(db.DateTime, default = datetime.datetime.utcnow)
-
-    # here got question -> moved to PROMPT
-    # machine_id = db.Column(db.String, db.ForeignKey('machine.machine_id'), unique = False, unllable = True)
-    # time_to_prompt = db.Column(db.DateTime, unique = False, nullable = True)
-    # machine_ending_time = db.Column(db.DateTime, unique = False, nullable = True)
-
+  
     # one-to-many relationship 
     user = db.relationship('User', back_populates = 'inputs')
 
@@ -83,15 +78,11 @@ class Machine(db.Model):
     machine_type = db.Column(db.String, unique = False, nullable = False)
     duration = db.Column(db.Integer, unique = False)
 
-    # machine_location = db.Column(db.String, unique = False, nullable = False)
-    # purchase_date = db.Column(db.Date, unique = False, unllable = False)
-    # machine_model = db.Cloumn(db.String, unique = False, unllable = False)
-
     # one-to-many relationship 
     sensors = db.relationship('Sensor', back_populates = 'machine', cascade = 'all', lazy = True, uselist = True)
     usages = db.relationship('Usage', back_populates = 'machine', cascade = 'all', lazy = True, uselist = True)
     # many-to-many relationship 
-    
+
     # build-in functions
     def __init__(self, machine_id, machine_type, duration, sensors = None, usages = None): 
         self.machine_id = machine_ud
@@ -119,7 +110,7 @@ class Usage(db.Model):
     machine_id = db.Column(db.String, db.ForeignKey('machine.machine_id'), nullable = False)
     start_timestamp = db.Column(db.DateTime, unique = False, nullable = False)
     end_time = db.Column(db.DateTime, unique = False, nullable = False)
-    
+
     # one-to-many relationship 
     machine = db.relationship('Machine', back_populates = 'usages')
     prompt_req = db.relationship('Prompt', back_populates = 'usage')
@@ -149,7 +140,7 @@ class Prompt(db.Model):
     start_timestamp = db.Column(db.DateTime, unique = False, nullable = False)
     time_to_prompt = db.Column(db.DateTime, unique = False, nullable = True)
     ending_time = db.Column(db.DateTime, unique = False, nullable = False)
-        
+    
     # one-to-many relationship 
     usage = db.relationship('Usage', back_populates = 'prompt_req')
     user = db.relationship('User', back_populates = 'prompt_reqs')
@@ -209,8 +200,7 @@ class Sensor(db.Model):
             'sensor_id': self.sensor_id, 
             'sensor_type': self.sensor_type,
             'deployment_date': self.deployment_date,
-            'v_sensor_readings': [v.serialize() for s in sensor_readings],
-            'usage': [u.serialize() for u in self.usages]
+            'sensor_readings': [v.serialize() for s in sensor_readings]
         }
 
 class Vib_sensor_data(db.Model):
