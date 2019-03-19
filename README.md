@@ -1,2 +1,2 @@
 # SMT203T6Project
-iLaundry System 
+This branch is for the testing only, do not deploy on server
